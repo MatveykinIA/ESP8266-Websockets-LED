@@ -1,6 +1,8 @@
 /*
   Скетч разработан 30.11.2018 Wirekraken
+  Исправлен 24.01.2022
 */
+
 #include <ESP8266WebServer.h>
 #include <WebSocketsServer.h>
 #include <FS.h>
@@ -9,12 +11,12 @@
 const char* ssid = "ssid"; // имя вашей сети
 const char* password = "password"; // пароль вашей сети
 
-IPAddress Ip(192,168,1,10); // IP-адрес для ESP
-IPAddress Gateway(192,168,1,1); // IP-адрес шлюза (роутера)
-IPAddress Subnet(255,255,255,0); // маска подсети, диапазон IP-адресов в локальной сети
+//IPAddress Ip(192,168,1,10); // IP-адрес для ESP
+//IPAddress Gateway(192,168,1,1); // IP-адрес шлюза (роутера)
+//IPAddress Subnet(255,255,255,0); // маска подсети, диапазон IP-адресов в локальной сети
  
 #define LED_COUNT 60 // число пикселей в ленте
-#define LED_DT 2    // пин, куда подключен DIN ленты (номера пинов ESP8266 совпадает с Arduino)  
+#define LED_DT 5    // пин, куда подключен DIN ленты (номера пинов ESP8266 совпадает с Arduino)  
 
 uint8_t bright = 25; // яркость (0 - 255)
 uint8_t ledMode = 0; // эффект (0 - 29)
@@ -122,9 +124,13 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
            uint32_t rgb = (uint32_t) strtol((const char *) &payload[1], NULL, 16);
           
            //преобразуем 24 бит по 8 бит на канал 
-           uint8_t r = abs(0 + (rgb >> 16) & 0xFF);
-           uint8_t g = abs(0 + (rgb >>  8) & 0xFF);
-           uint8_t b = abs(0 + (rgb >>  0) & 0xFF);
+           // Исходник закоментирован
+           //uint8_t r = abs(0 + (rgb >> 16) & 0xFF);
+           //uint8_t g = abs(0 + (rgb >>  8) & 0xFF);
+           //uint8_t b = abs(0 + (rgb >>  0) & 0xFF);
+           uint32_t r = 0 + (rgb >> 16) & 0xFF;
+           uint32_t g = 0 + (rgb >>  8) & 0xFF;
+           uint32_t b = 0 + (rgb >>  0) & 0xFF;
            
            Serial.print("ColorPicker: ");
            Serial.print(r);
